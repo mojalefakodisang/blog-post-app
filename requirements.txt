@@ -3,3 +3,4 @@ flask-wtf
 flask-login
 flask-bcrypt
 flask-sqlalchemy
+pillow
