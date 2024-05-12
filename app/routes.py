@@ -18,8 +18,9 @@ def home():
     Returns:
         The rendered home.html template with the title set to "Home" and posts set to post.
     """
-    post = Post.query.all()
-    return render_template("home.html", title="Home", posts=post)
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template("home.html", title="Home", posts=posts)
 
 @app.route("/about")
 def about():
@@ -109,6 +110,8 @@ def save_picture(form_picture):
 @login_required
 def account():
     form = UpdateAccountForm()
+    user = User.query.filter_by(username=current_user.username).first()
+    posts = Post.query.filter_by(author=user).all()
     if form.validate_on_submit():
         if form.picture.data:
             filename = save_picture(form.picture.data)
@@ -123,7 +126,7 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('account.html', title='Account', image_file=image_file, form=form)
+    return render_template('account.html', user=user, posts=posts, title='Account', image_file=image_file, form=form)
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
@@ -172,3 +175,12 @@ def delete_post(post_id):
     db.session.commit()
     flash('Your Post has been deleted!', 'success')
     return redirect(url_for('home'))
+
+@app.route("/user/<string:username>")
+def user(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template("user_posts.html", title=f"{username}", posts=posts, user=user)
