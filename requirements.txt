@@ -1,6 +1,7 @@
 flask
+Pillow
 flask-wtf
+flask-mail
 flask-login
 flask-bcrypt
 flask-sqlalchemy
-pillow
