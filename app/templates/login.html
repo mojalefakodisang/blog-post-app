@@ -39,14 +39,13 @@
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
-            <small class="text-muted ml-2">
-                <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
-            </small>
+            
         </form>
-    </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Don't Have An Account? <a class="ml-2" href="{{ url_for('register') }}">Sign up here</a>
-        </small>
+        <div class="pt-3">
+            <a href="{{ url_for('users.reset_request') }}" class="text-decoration-none text-danger" data-toggle="tooltip" data-placement="top" title="Function not functional">
+                Forgot password?
+                <i class="fas fa-exclamation-triangle ml-1"></i>
+            </a>
+        </div>
     </div>
 {% endblock content %}
