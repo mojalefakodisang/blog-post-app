@@ -1,4 +1,4 @@
-from app import app, db
+from flask_app import db
 from datetime import datetime
 
 class Post(db.Model):
